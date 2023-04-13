@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from sqlalchemy import or_
+from waitress import serve
 
 app = Flask(__name__)
 
