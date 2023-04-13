@@ -186,27 +186,27 @@
           $('.modal').modal();
           $('select').formSelect();
 
-          const searchButton = document.getElementById('search-button');
-          searchButton.addEventListener('click', () => {
-            // alert("Deu certo!")
+          // const searchButton = document.getElementById('search-button');
+          // searchButton.addEventListener('click', () => {
+          //   // alert("Deu certo!")
 
-            const searchInput = document.getElementById('search-input');
-            const searchTerm = searchInput.value.trim().toLowerCase();
-            alert("Buscando: " + searchTerm);
-            const filteredData = data.filter(item => {
-              return item.nome.toLowerCase().includes(searchTerm) || item.matricula.toString().includes(searchTerm);
-            });
+          //   const searchInput = document.getElementById('search-input');
+          //   const searchTerm = searchInput.value.trim().toLowerCase();
+          //   alert("Buscando: " + searchTerm);
+          //   const filteredData = data.filter(item => {
+          //     return item.nome.toLowerCase().includes(searchTerm) || item.matricula.toString().includes(searchTerm);
+          //   });
 
-            const listContainer = document.getElementById('container');
-            listContainer.innerHTML = '';
-            filteredData.forEach(item => {
-              const listItem = document.createElement('li');
-              listItem.textContent = `${item.nome} - ${item.matricula}`;
-              listContainer.appendChild(listItem);
-            });
+          //   const listContainer = document.getElementById('container');
+          //   listContainer.innerHTML = '';
+          //   filteredData.forEach(item => {
+          //     const listItem = document.createElement('li');
+          //     listItem.textContent = `${item.nome} - ${item.matricula}`;
+          //     listContainer.appendChild(listItem);
+          //   });
 
-            // Código para buscar os dados com base no termo inserido pelo usuário
-          });
+          //   // Código para buscar os dados com base no termo inserido pelo usuário
+          // });
 
         });
       </script>

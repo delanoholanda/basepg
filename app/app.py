@@ -1,11 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-from flask_paginate import Pagination, get_page_parameter
 from flask_sqlalchemy import SQLAlchemy
-
 from config import Config
-import psycopg2
-import psycopg2.pool
-from sqlalchemy import func, or_
+from sqlalchemy import or_
 
 app = Flask(__name__)
 
@@ -29,7 +25,7 @@ def index():
     # Obtém o número da página atual a partir do parâmetro da URL 'page'
     page = request.args.get('page', 1, type=int)
     # Define o número de itens por página
-    per_page = 10
+    per_page = 6
 
     if request.method == 'POST':
         # Obter a entrada do usuário a partir do formulário de pesquisa
@@ -63,7 +59,7 @@ def add_matricula():
 
     matricula_obj = Matriculas(
         matricula=matricula, nome=nome, curso=curso, 
-        cadastrado=False, uidnumber=uidnumber
+        cadastrado=0, uidnumber=uidnumber
     )
     db.session.add(matricula_obj)
     db.session.commit()
