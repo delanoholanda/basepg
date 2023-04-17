@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 app.config.from_object(Config)
 
-mododebug = True
+mododebug = False
 
 db = SQLAlchemy(app)
 
@@ -97,5 +97,5 @@ if __name__ == '__main__':
         app.run(debug=True)
     else:
         # Executar modo produção
-        print("Escutando na porta 5000")
-        serve(app, host="0.0.0.0", port=5000)
+        print("Escutando na porta 5010")
+        serve(app, host="0.0.0.0", port=5010)

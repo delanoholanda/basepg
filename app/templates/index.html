@@ -8,8 +8,8 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='estilo.css') }}">
   </head>
   <body>
-    <nav>
-      <div class="nav-wrapper blue darken-2">
+    <nav class="blue darken-2">
+      <div class="nav-wrapper container">
         <a href="#" class="brand-logo center">Gerenciamento de Matrículas</a>
       </div>
     </nav>
@@ -17,7 +17,7 @@
       {% with messages = get_flashed_messages(with_categories=true) %}
         {% if messages %}
           {% for category, message in messages %}
-            <div class="alert-{{ category }}">
+            <div class="card-panel {{ category }}">
               {{ message }}
             </div>
           {% endfor %}
@@ -26,16 +26,19 @@
       <br>
       <a class="waves-effect waves-light btn modal-trigger" href="#addModal">Adicionar Matrícula</a>
       <br><br>  
-      <!-- <input type="text" id="search-input" placeholder="Digite o nome ou a matrícula"> -->
-      <!-- <button class="waves-effect waves-light btn modal-trigger" id="search-button">Buscar</button> -->
       <form action="/" method="post">
-        <div class="form-group">
-            <input type="text" name="search" value="{{ search }}" class="form-control" placeholder="Pesquisar...">
+        <div class="row">
+          <div class="input-field col s12 m8">
+            <input type="text" name="search" value="{{ search }}" placeholder="Pesquisar...">
+            <label for="search">Pesquisar</label>
+          </div>
+          <div class="input-field col s12 m4">
+            <button type="submit" class="waves-effect waves-light btn blue">Buscar</button>
+          </div>
         </div>
-        <button type="submit" class="btn btn-primary">Buscar</button>
       </form>
       <br><br>
-      <table class="highlight">
+      <table class="striped responsive-table">
         <thead>
           <tr>
             <th>Matrícula</th>
@@ -125,7 +128,6 @@
       </ul>
     </div>
     
-
       <!-- Modal de Editar Matrícula -->
       <div>
       {% for matricula in matriculas %}
@@ -185,29 +187,6 @@
         $(document).ready(function(){
           $('.modal').modal();
           $('select').formSelect();
-
-          // const searchButton = document.getElementById('search-button');
-          // searchButton.addEventListener('click', () => {
-          //   // alert("Deu certo!")
-
-          //   const searchInput = document.getElementById('search-input');
-          //   const searchTerm = searchInput.value.trim().toLowerCase();
-          //   alert("Buscando: " + searchTerm);
-          //   const filteredData = data.filter(item => {
-          //     return item.nome.toLowerCase().includes(searchTerm) || item.matricula.toString().includes(searchTerm);
-          //   });
-
-          //   const listContainer = document.getElementById('container');
-          //   listContainer.innerHTML = '';
-          //   filteredData.forEach(item => {
-          //     const listItem = document.createElement('li');
-          //     listItem.textContent = `${item.nome} - ${item.matricula}`;
-          //     listContainer.appendChild(listItem);
-          //   });
-
-          //   // Código para buscar os dados com base no termo inserido pelo usuário
-          // });
-
         });
       </script>
       
