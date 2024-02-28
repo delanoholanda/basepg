@@ -1,0 +1,80 @@
+<!-- Modais -->
+<div id="addModal" class="modal">
+    <form action="{{ url_for('add_matricula') }}" method="POST">
+      <div class="modal-content">
+        <h4>Adicionar Matrícula</h4>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="matricula" type="number" name="matricula" required>
+            <label for="matricula">Matrícula</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="nome" type="text" name="nome" required>
+            <label for="nome">Nome</label>
+          </div>
+          <div class="input-field col s12">
+            <select id="curso" name="curso" required>
+              <option value="" disabled selected>Escolha uma opção</option>
+              <option value="Sistemas de Informação">Sistemas de Informação</option>
+              <option value="Redes de Computadores">Redes de Computadores</option>
+              <option value="Engenharia de Software">Engenharia de Software</option>
+              <option value="Engenharia da Computação">Engenharia da Computação</option>
+              <option value="Design Digital">Design Digital</option>
+              <option value="Ciência da Computação">Ciência da Computação</option>
+              <option value="Mestrado em Computação">Mestrado em Computação</option>
+            </select>
+            <label for="curso">Curso</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="waves-effect waves-light btn blue">Salvar</button>
+        <a href="#" class="modal-close waves-effect waves-light btn-flat">Cancelar</a>
+      </div>
+    </form>
+  </div>
+  
+  <!-- Modais de Editar e Excluir Matrícula -->
+  {% for matricula in matriculas %}
+  <div id="editModal{{ matricula.id_matriculas }}" class="modal">
+    <form action="{{ url_for('update_matricula', id=matricula.id_matriculas) }}" method="POST">
+      <div class="modal-content">
+        <h4>Editar Matrícula</h4>
+        <div class="row">
+          <div class="input-field col s12">
+            <input id="matricula" type="number" name="matricula" value="{{ matricula.matricula }}" required>
+            <label for="matricula">Matrícula</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="nome" type="text" name="nome" value="{{ matricula.nome }}" required>
+            <label for="nome">Nome</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="curso" type="text" name="curso" value="{{ matricula.curso }}" required>
+            <label for="curso">Curso</label>
+          </div>
+          <div class="input-field col s12">
+            <input id="cadastrado" type="number" name="cadastrado" value="{{ matricula.cadastrado }}" required>
+            <label for="cadastrado">Cadastrado</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="submit" class="waves-effect waves-light btn blue">Salvar</button>
+        <a href="#" class="modal-close waves-effect waves-light btn-flat">Cancelar</a>
+      </div>
+    </form>
+  </div>
+  
+  <div id="deleteModal{{ matricula.id_matriculas }}" class="modal">
+    <div class="modal-content">
+      <h4>Excluir Matrícula</h4>
+      <p>Tem certeza que deseja excluir a matrícula "{{ matricula.nome }}"?</p>
+    </div>
+    <div class="modal-footer">
+      <a href="{{ url_for('delete_matricula', id=matricula.id_matriculas) }}" class="waves-effect waves-light btn red">Excluir</a>
+      <a href="#" class="modal-close waves-effect waves-light btn-flat">Cancelar</a>
+    </div>
+  </div>
+  {% endfor %}
+  

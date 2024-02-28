@@ -1,193 +1,97 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Gerenciamento de Matrículas</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='estilo.css') }}">
-  </head>
-  <body>
-    <nav class="blue darken-2">
-      <div class="nav-wrapper container">
-        <a href="#" class="brand-logo center">Gerenciamento de Matrículas</a>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciamento de Matrículas</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='estilo.css') }}">
+</head>
+<body>
+  <nav class="blue darken-2">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo center">Gerenciamento de Matrículas</a>
+    </div>
+  </nav>
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="card-panel {{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div style="padding-top: 20px;" class="row">
+      <div class="col s12 m6">
+        <a class="waves-effect waves-light btn modal-trigger" href="#addModal">Adicionar Matrícula</a>
       </div>
-    </nav>
-    <div class="container">
-      {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-          {% for category, message in messages %}
-            <div class="card-panel {{ category }}">
-              {{ message }}
-            </div>
-          {% endfor %}
-        {% endif %}
-      {% endwith %}
-      <br>
-      <a class="waves-effect waves-light btn modal-trigger" href="#addModal">Adicionar Matrícula</a>
-      <br><br>  
-      <form action="/" method="post">
-        <div class="row">
-          <div class="input-field col s12 m8">
+      <div class="col s12 m6">
+        <form action="/" method="post">
+          <div class="input-field">
             <input type="text" name="search" value="{{ search }}" placeholder="Pesquisar...">
             <label for="search">Pesquisar</label>
           </div>
-          <div class="input-field col s12 m4">
-            <button type="submit" class="waves-effect waves-light btn blue">Buscar</button>
-          </div>
+          <button type="submit" class="waves-effect waves-light btn blue">Buscar</button>
+        </form>
+      </div>
+    </div>
+
+    <h5>Adicionar em Lote</h5>
+    <form action="{{ url_for('add_matriculas') }}" method="POST" enctype="multipart/form-data">
+      <div class="file-field input-field">
+        <div class="btn">
+          <span>Arquivo</span>
+          <input type="file" name="file" accept=".csv">
         </div>
-      </form>
-      <br><br>
-      <table class="striped responsive-table">
-        <thead>
-          <tr>
-            <th>Matrícula</th>
-            <th>Nome</th>
-            <th>Curso</th>
-            <th>Cadastrado</th>
-            <th>Ações</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for matricula in matriculas %}
-          <tr>
-            <td>{{ matricula.matricula }}</td>
-            <td>{{ matricula.nome }}</td>
-            <td>{{ matricula.curso }}</td>
-            <td>{{ matricula.cadastrado }}</td>
-            <td>
-              <a class="waves-effect waves-light btn modal-trigger" href="#editModal{{ matricula.id_matriculas }}">Editar</a>
-              <a class="waves-effect waves-light btn red modal-trigger" href="#deleteModal{{ matricula.id_matriculas }}">Excluir</a>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-    <div>
-    <!-- Modal de Adicionar Matrícula -->
-    <div id="addModal" style="height: 75% !important; " class="modal">
-      <form action="{{ url_for('add_matricula') }}" method="POST">
-        <div class="modal-content">
-          <h4>Adicionar Matrícula</h4>
-          <div class="row">
-            <div class="input-field col s12">
-              <input id="matricula" type="number" name="matricula" required>
-              <label for="matricula">Matrícula</label>
-            </div>
-            <div class="input-field col s12">
-              <input id="nome" type="text" name="nome" required>
-              <label for="nome">Nome</label>
-            </div>
-            <div class="input-field col s12">
-              <select id="curso" name="curso" required>
-                <option value="" disabled selected>Escolha uma opção</option>
-                <option value="Sistemas de Informação">Sistemas de Informação</option>
-                <option value="Redes de Computadores">Redes de Computadores</option>
-                <option value="Engenharia de Software">Engenharia de Software</option>
-                <option value="Engenharia da Computação">Engenharia da Computação</option>
-                <option value="Design Digital">Design Digital</option>
-                <option value="Ciência da Computação">Ciência da Computação</option>
-                <option value="Mestrado">Mestrado</option>
-              </select>
-              <label for="curso">Curso</label>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="waves-effect waves-light btn blue">Salvar</button>
-            <a href="#" class="modal-close waves-effect waves-light btn-flat">Cancelar</a>
-          </div>
-        </form>
+        <div class="file-path-wrapper">
+          <input name="file" class="requeridoOngraduacao file-path validate" type="text" placeholder="Selecione um arquivo">
+        </div>
       </div>
-    </div>
-    <div class="center-align">
-      <ul class="pagination pagination-materialize">
-        {% if matriculas.has_prev %}
-          <li class="waves-effect"><a href="{{ url_for('index', page=matriculas.prev_num) }}">Anterior</a></li>
-        {% else %}
-          <li class="disabled"><a href="#">Anterior</a></li>
-        {% endif %}
-    
-        {% for num in matriculas.iter_pages() %}
-          {% if num %}
-            {% if num == matriculas.page %}
-              <li class="active"><a href="#">{{ num }}</a></li>
-            {% else %}
-              <li class="waves-effect"><a href="{{ url_for('index', page=num) }}">{{ num }}</a></li>
-            {% endif %}
-          {% else %}
-            <li class="disabled"><a href="#">&#8230;</a></li>
-          {% endif %}
+      <button type="submit" class="waves-effect waves-light btn blue">Enviar Arquivo</button>
+    </form>
+
+    <br><br>
+    <table class="striped responsive-table">
+      <thead>
+        <tr>
+          <th>Matrícula</th>
+          <th>Nome</th>
+          <th>Curso</th>
+          <th>Cadastrado</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for matricula in matriculas %}
+        <tr>
+          <td>{{ matricula.matricula }}</td>
+          <td>{{ matricula.nome }}</td>
+          <td>{{ matricula.curso }}</td>
+          <td>{{ matricula.cadastrado }}</td>
+          <td>
+            <a class="waves-effect waves-light btn modal-trigger" href="#editModal{{ matricula.id_matriculas }}">Editar</a>
+            <a class="waves-effect waves-light btn red modal-trigger" href="#deleteModal{{ matricula.id_matriculas }}">Excluir</a>
+          </td>
+        </tr>
         {% endfor %}
-    
-        {% if matriculas.has_next %}
-          <li class="waves-effect"><a href="{{ url_for('index', page=matriculas.next_num) }}">Próximo</a></li>
-        {% else %}
-          <li class="disabled"><a href="#">Próximo</a></li>
-        {% endif %}
-      </ul>
-    </div>
-    
-      <!-- Modal de Editar Matrícula -->
-      <div>
-      {% for matricula in matriculas %}
-      <div id="editModal{{ matricula.id_matriculas }}" class="modal">
-        <form action="{{ url_for('update_matricula', id=matricula.id_matriculas) }}" method="POST">
-          <div class="modal-content">
-            <h4>Editar Matrícula</h4>
-            <div class="row">
-              <div class="input-field col s12">
-                <input id="matricula" type="number" name="matricula" value="{{ matricula.matricula }}" required>
-                <label for="matricula">Matrícula</label>
-              </div>
-              <div class="input-field col s12">
-                <input id="nome" type="text" name="nome" value="{{ matricula.nome }}" required>
-                <label for="nome">Nome</label>
-              </div>
-              <div class="input-field col s12">
-                <input id="curso" type="text" name="curso" value="{{ matricula.curso }}" required>
-                <label for="curso">Curso</label>
-              </div>
-              <div class="input-field col s12">
-                <input id="cadastrado" type="number" name="cadastrado" value="{{ matricula.cadastrado }}" required>
-                <label for="cadastrado">Cadastrado</label>
-              </div>
-            </div>
-          </div>
-          <div class="modal-footer">
-            <button type="submit" class="waves-effect waves-light btn blue">Salvar</button>
-            <a href="#" class="modal-close waves-effect waves-light btn-flat">Cancelar</a>
-          </div>
-        </form>
-      </div>
-      {% endfor %}
-    </div>
-      
-      <div>
-      <!-- Modal de Excluir Matrícula -->
-      {% for matricula in matriculas %}
-      <div id="deleteModal{{ matricula.id_matriculas }}" class="modal">
-        <!-- <form action="{{ url_for('delete_matricula', id=matricula.id_matriculas) }}" method="POST"> -->
-          <div class="modal-content">
-            <h4>Excluir Matrícula</h4>
-            <p>Tem certeza que deseja excluir a matrícula "{{ matricula.nome }}"?</p>
-          </div>
-          <div class="modal-footer">
-            <a href="{{ url_for('delete_matricula', id=matricula.id_matriculas) }}" class="waves-effect waves-light btn red">Excluir</a>
-            <a href="#" class="modal-close waves-effect waves-light btn-flat">Cancelar</a>
-          </div>
-        <!-- </form> -->
-      </div>
-      {% endfor %}
-    </div>
-      
-      <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-      <script>
-        $(document).ready(function(){
-          $('.modal').modal();
-          $('select').formSelect();
-        });
-      </script>
-      
-       
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Modais -->
+  {% include 'modals.html' %}
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script>
+    $(document).ready(function(){
+      $('.modal').modal();
+      $('select').formSelect();
+    });
+  </script>
+</body>
+</html>

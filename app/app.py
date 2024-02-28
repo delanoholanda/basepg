@@ -3,12 +3,17 @@ from flask_sqlalchemy import SQLAlchemy
 from config import Config
 from sqlalchemy import or_
 from waitress import serve
+from werkzeug.utils import secure_filename
+import csv
+import os
+import sys
+
 
 app = Flask(__name__)
 
 app.config.from_object(Config)
 
-mododebug = False
+mododebug = True
 
 db = SQLAlchemy(app)
 
@@ -19,6 +24,15 @@ class Matriculas(db.Model):
     curso = db.Column(db.String(100), nullable=False)
     cadastrado = db.Column(db.Integer, nullable=False)
     uidnumber = db.Column(db.Integer, nullable=False)
+
+# Diretório de upload
+UPLOAD_FOLDER = os.path.join(app.root_path, 'Uploads')
+
+# Verifica se o diretório de upload existe, caso contrário, cria-o
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -51,6 +65,11 @@ def add_matricula():
         flash('A matricula é obrigatória.', 'error')
         return redirect(url_for('index'))
 
+    cadastrar_matricula(matricula, nome, curso)
+
+    return redirect(url_for('index'))
+
+def cadastrar_matricula(matricula, nome, curso):
     matricula_obj = Matriculas.query.filter_by(matricula=matricula).first()
     if matricula_obj:
         flash(f"A matricula {matricula} já esta cadastrada.", 'error')
@@ -65,7 +84,38 @@ def add_matricula():
     db.session.add(matricula_obj)
     db.session.commit()
     flash(f"A matricula {matricula} foi cadastrada com sucesso.", 'success')
-    return redirect(url_for('index'))
+
+@app.route('/add_matriculas', methods=['POST'])
+def add_matriculas():
+    if 'file' not in request.files:
+        flash('Nenhum arquivo enviado.', 'error')
+        return redirect(url_for('index'))
+
+    file = request.files['file']
+
+    if file.filename == '':
+        flash('Nenhum arquivo selecionado.', 'error')
+        return redirect(request.url)
+
+    if file and file.filename.endswith('.csv'):
+        filename = secure_filename(file.filename)
+        caminho_arquivo = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+        file.save(caminho_arquivo)  # Salva o arquivo no diretório de uploads
+        process_csv(caminho_arquivo)  # Passa o caminho do arquivo para a função de processamento CSV
+        # flash('Arquivo enviado com sucesso.', 'success')
+        return redirect(url_for('index'))
+    else:
+        flash('Formato de arquivo inválido. Apenas arquivos .csv são permitidos.', 'error')
+        return redirect(request.url)
+
+def process_csv(filename):
+    with open(filename, newline='', encoding='utf-8') as csvfile:
+        reader = csv.DictReader(csvfile)
+        for row in reader:
+            matricula = row['Matricula']
+            nome = row['Nome']
+            curso = row['Curso']
+            cadastrar_matricula(matricula, nome, curso)
 
 def get_next_uidnumber():
     last_uidnumber = Matriculas.query.order_by(Matriculas.id_matriculas.desc()).first().uidnumber
