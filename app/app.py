@@ -112,7 +112,7 @@ def process_csv(filename):
     with open(filename, newline='', encoding='utf-8') as csvfile:
         reader = csv.DictReader(csvfile)
         for row in reader:
-            matricula = row['Matricula']
+            matricula = row['Matrícula']
             nome = row['Nome']
             curso = row['Curso']
             cadastrar_matricula(matricula, nome, curso)
