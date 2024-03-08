@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 app.config.from_object(Config)
 
-mododebug = True
+mododebug = False
 
 db = SQLAlchemy(app)
 
