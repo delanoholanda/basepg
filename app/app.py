@@ -110,7 +110,7 @@ def add_matriculas():
 
 def process_csv(filename):
     with open(filename, newline='', encoding='utf-8') as csvfile:
-        reader = csv.DictReader(csvfile)
+        reader = csv.DictReader(csvfile, delimiter=';')
         for row in reader:
             matricula = row['Matrícula']
             nome = row['Nome']
